@@ -13,13 +13,14 @@ Follow the steps below exactly and in order.
 ```bash
 sudo apt update
 sudo apt install -y git
-Step 2: Clone this repository using HTTPS
+
+##  Step 2: Clone this repository using HTTPS
 
 SSH is not configured yet, so HTTPS must be used for the initial clone.
 
 git clone https://github.com/jotyprokash/github-ssh-bootstrap.git
 cd github-ssh-bootstrap
-Step 3: Make the setup script executable
+## Step 3: Make the setup script executable
 chmod +x scripts/setup-github-ssh.sh
 Step 4: Run the SSH setup script
 
