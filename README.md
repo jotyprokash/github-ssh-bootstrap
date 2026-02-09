@@ -1,64 +1,95 @@
 # GitHub SSH Bootstrap for Ubuntu
 
 
-This repository provides a strict, copy-pasteable process to configure SSH-based GitHub access on an Ubuntu machine or server.
+A simple and reproducible way to configure SSH-based GitHub access on an Ubuntu machine or server.
 
 
-Follow the steps below exactly and in order.
+This setup allows you to clone repositories, commit changes, and push code to GitHub without passwords or access tokens. Authentication is handled entirely through SSH.
 
 
-## Step 1: Install Git
+---
+
+
+## Installation
+
+
+Since SSH is not configured yet, the initial clone must use HTTPS.
 
 
 ```bash
 sudo apt update
 sudo apt install -y git
 
-##  Step 2: Clone this repository using HTTPS
-
-SSH is not configured yet, so HTTPS must be used for the initial clone.
 
 git clone https://github.com/jotyprokash/github-ssh-bootstrap.git
 cd github-ssh-bootstrap
-## Step 3: Make the setup script executable
-chmod +x scripts/setup-github-ssh.sh
-Step 4: Run the SSH setup script
 
-Use the same email address associated with your GitHub account.
+Make the setup script executable.
+
+chmod +x scripts/setup-github-ssh.sh
+
+Run the SSH setup script using the email address associated with your GitHub account.
 
 ./scripts/setup-github-ssh.sh your-email@example.com
 
-The script will generate an SSH key if one does not exist, start the SSH agent, add the key, and print the public key.
+The script will generate an SSH key if one does not exist, start the SSH agent, add the key, and print the public SSH key.
 
-Step 5: Add the SSH key to GitHub
+Usage
 
-Copy the printed public key and add it in GitHub:
+Copy the printed public key and add it to GitHub:
 
 Settings → SSH and GPG keys → New SSH key
 
 After adding the key, return to the terminal and press Enter.
 
-Step 6: Confirm GitHub host authenticity
-
-On first connection, you may see this prompt:
+On first connection, GitHub may ask to confirm host authenticity:
 
 Are you sure you want to continue connecting (yes/no)?
 
 Type yes and press Enter. This happens once per machine.
 
-Step 7: Verify SSH authentication
+Verify SSH authentication:
+
 ssh -T git@github.com
 
 Expected output:
 
 Hi <your-username>! You've successfully authenticated, but GitHub does not provide shell access.
-Step 8: Configure Git identity (required on servers)
+Git Configuration (Required on Servers)
 
-Git cannot create commits until a user identity is configured. Run these commands once per machine.
+On fresh servers, Git cannot create commits until a user identity is configured.
+
+Run the following commands once per machine:
 
 git config --global user.name "Your Name"
 git config --global user.email "your-email@example.com"
 
-Verify:
+Verify the configuration:
 
 git config --global --list
+Working with Repositories
+
+After setup, use Git normally with SSH.
+
+Clone a repository:
+
+git clone git@github.com:OWNER/REPO.git
+
+Make changes and push them to GitHub:
+
+git status
+git add .
+git commit -m "Your commit message"
+git push
+
+No passwords or access tokens will be required.
+
+Notes
+
+This setup is required once per machine
+
+Existing SSH keys are reused safely
+
+Git identity configuration is mandatory for committing changes
+
+Suitable for laptops, servers, and long-running environment
