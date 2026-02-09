@@ -1,47 +1,42 @@
-
----
-
-## 📄 `scripts/setup-github-ssh.sh`
-
-```bash
 #!/usr/bin/env bash
 set -e
 
-EMAIL=${1:-"your-email@example.com"}
+EMAIL="${1:-your-email@example.com}"
 KEY_PATH="$HOME/.ssh/id_ed25519"
 
-echo "🔐 GitHub SSH Bootstrap Starting..."
+echo "Starting GitHub SSH setup"
 
-# Ensure SSH directory
-mkdir -p ~/.ssh
-chmod 700 ~/.ssh
+# Ensure SSH directory exists
+mkdir -p "$HOME/.ssh"
+chmod 700 "$HOME/.ssh"
 
-# Generate SSH key if missing
+# Generate SSH key if it does not exist
 if [ ! -f "$KEY_PATH" ]; then
-  echo "➡️ Generating SSH key..."
+  echo "Generating SSH key"
   ssh-keygen -t ed25519 -C "$EMAIL" -f "$KEY_PATH" -N ""
 else
-  echo "✅ SSH key already exists"
+  echo "SSH key already exists, reusing it"
 fi
 
-# Start ssh-agent
-eval "$(ssh-agent -s)"
+# Start ssh-agent if not running
+if ! pgrep -u "$USER" ssh-agent >/dev/null 2>&1; then
+  eval "$(ssh-agent -s)"
+fi
 
-# Add key
+# Add key to agent
 ssh-add "$KEY_PATH"
 
 echo
-echo "📌 COPY THIS PUBLIC KEY TO GITHUB:"
-echo "--------------------------------"
+echo "Copy the public key below and add it to your GitHub account:"
+echo
 cat "${KEY_PATH}.pub"
-echo "--------------------------------"
 echo
 
-echo "👉 GitHub → Settings → SSH and GPG keys → New SSH key"
-read -p "Press ENTER after adding the key to GitHub..."
+echo "GitHub → Settings → SSH and GPG keys → New SSH key"
+read -r -p "Press Enter after the key has been added..."
 
-# Test connection
+# Verify connection
 ssh -T git@github.com || true
 
 echo
-echo "🎉 GitHub SSH setup complete!"
+echo "GitHub SSH setup complete"
