@@ -16,7 +16,6 @@ After completing this setup, you will be able to clone repositories, commit chan
 
 This setup is required once per machine.
 
----
 
 ## Step 1: Install Git
 
